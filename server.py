@@ -1,7 +1,5 @@
 import json
-import logging
 import os
-import ssl
 import uuid
 import numpy as np
 
@@ -10,11 +8,11 @@ from aiohttp import web
 from av import VideoFrame
 
 from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
-from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder
+# from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder
 
 ROOT = os.path.dirname(__file__)
 
-logger = logging.getLogger("pc")
+
 pcs = set()
 
 List = [ [ ] ]
@@ -167,22 +165,22 @@ async def offer(request):
 	pc_id = "PeerConnection(%s)" % uuid.uuid4()
 	pcs.add(pc)
 
-	def log_info(msg, *args):
-		logger.info(pc_id + " " + msg, *args)
+	# def log_info(msg, *args):
+	# 	logger.info(pc_id + " " + msg, *args)
 
-	log_info("Created for %s", request.remote)
+	# log_info("Created for %s", request.remote)
 
 
 	@pc.on("iceconnectionstatechange")
 	async def on_iceconnectionstatechange():
-		log_info("ICE connection state is %s", pc.iceConnectionState)
+		# log_info("ICE connection state is %s", pc.iceConnectionState)
 		if pc.iceConnectionState == "failed":
 			await pc.close()
 			pcs.discard(pc)
 
 	@pc.on("track")
 	def on_track(track):
-		log_info("Track %s received", track.kind)
+		# log_info("Track %s received", track.kind)
 		local_video = VideoTransformTrack(
 				track
 			)
@@ -190,7 +188,9 @@ async def offer(request):
 
 		@track.on("ended")
 		async def on_ended():
-			log_info("Track %s ended", track.kind)
+			pass
+			pass
+		# 	log_info("Track %s ended", track.kind)
 
 	# handle offer
 	await pc.setRemoteDescription(offer)
@@ -216,7 +216,7 @@ async def on_shutdown(app):
 if __name__ == "__main__":
 
 
-	logging.basicConfig(level=logging.INFO)
+	# logging.basicConfig(level=logging.INFO)
 
 	# if args.cert_file:
 	# 	ssl_context = ssl.SSLContext()
