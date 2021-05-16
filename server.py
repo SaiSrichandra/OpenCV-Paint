@@ -11,7 +11,7 @@ from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 # from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder
 
 ROOT = os.path.dirname(__file__)
-
+port = int(os.environ.get("PORT", 8080))
 
 pcs = set()
 
@@ -230,5 +230,5 @@ if __name__ == "__main__":
 	app.router.add_get("/client.js", javascript)
 	app.router.add_post("/offer", offer)
 	web.run_app(
-		app, access_log=None, host='0.0.0.0', port='8080', ssl_context=None
+		app, access_log=None, host='0.0.0.0', port=port, ssl_context=None
 	)
